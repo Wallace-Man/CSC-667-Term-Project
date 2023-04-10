@@ -3,8 +3,8 @@ const router = express.Router();
 
 router.get("/", (request, response) => {
     response.render("home", {
-        title: "Hi World!",
-        message: "Our first tmplate.",
+        title: "Home",
+        message: "Our first template.",
       });
 })
 

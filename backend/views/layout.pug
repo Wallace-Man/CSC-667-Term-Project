@@ -4,4 +4,12 @@ html
     link(rel='stylesheet' href='/stylesheets/home.css')
     script(src='/scripts/bundle.js')
   body
+    nav
+      ul.navbar
+        li.nav-item.left
+          a.nav-link(href='/') Home
+        li.nav-item.right.login
+          a.nav-link(href='/authentication/login') Login
+        li.nav-item.right.signup
+          a.nav-link(href='/authentication/sign-up') Sign Up
     block content

@@ -1,3 +1,8 @@
+const homeRoutes = require("./routes/static/home.js");
+const gamesRoutes = require("./routes/static/games.js");
+const lobbyRoutes = require("./routes/static/lobby.js");
+const authenticationRoutes = require("./routes/static/authentication.js");
+
 const path = require("path");
 const createError = require("http-errors");
 const cookieParser = require("cookie-parser");
@@ -34,7 +39,10 @@ app.use(express.static(path.join(__dirname, "", "static")));
 
 const rootRoutes = require("../backend/routes/root");
 
-app.use("/", rootRoutes);
+app.use("/", homeRoutes);
+app.use("/games", gamesRoutes);
+app.use("/lobby", lobbyRoutes);
+app.use("/authentication", authenticationRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
