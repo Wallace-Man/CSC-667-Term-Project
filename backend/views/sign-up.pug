@@ -14,6 +14,10 @@ block content
                 label( for="inputUsername" class="sr-only") Username: 
                 input(type="username" name="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus)
             li
+            email 
+                label(for="inputEmail" class="sr-only") Email: 
+                input(type="email" name="email" id="inputEmail" class="form-control" placeholder="example123@gmail.com" required)
+            li
             password
                 label(for="inputPassword" class="sr-only") Password: 
                 input(type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required)
@@ -21,6 +25,6 @@ block content
             confirmpassword
                 label(for="confirmpassword" class="sr-only") Confirm Password: 
                 input(type="confirmpassword" name="confirmpassword" id="confirmpassword" class="form-control" placeholder="Confirm Password" required)
-            p
+            li
             - var buttonClass=['btn', 'btn-lg', 'btn-primary', 'btn-block'];
             button(class=buttonClass type="submit") Sign Up 

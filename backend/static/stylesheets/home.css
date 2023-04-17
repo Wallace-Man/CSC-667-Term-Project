@@ -34,6 +34,11 @@ ul {
 	margin: 0;
 	padding: 0;
 }
+.text-center{
+	padding:10px;
+  	border-radius:10px;
+	margin:10px 0;
+}
 div{
 	text-align: center;
 	display: inline;
@@ -82,14 +87,15 @@ button2{
   transform: translateY(4px);
 }
 
-user{
-	font-size: 20;
+label{
+	font-size:20;
+	display: inline-block;
+	width: 200px;
 }
 
-password{
-	font-size: 20;
-}
-
-confirmpassword{
-	font-size: 20;
+input{
+	padding:10px;
+  	border-radius:10px;
+	margin:10px 0;
+	align-self: right;
 }
