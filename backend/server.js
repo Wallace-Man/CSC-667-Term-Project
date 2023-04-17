@@ -3,6 +3,11 @@ const gamesRoutes = require("./routes/static/games.js");
 const lobbyRoutes = require("./routes/static/lobby.js");
 const authenticationRoutes = require("./routes/static/authentication.js");
 
+const testRoutes = require("./routes/test/index.js");
+
+
+require("dotenv").config();
+
 const path = require("path");
 const createError = require("http-errors");
 const cookieParser = require("cookie-parser");
@@ -11,6 +16,7 @@ const morgan = require("morgan");
 const express = require("express");
 const app = express();
 
+app.use("/test", testRoutes);
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
