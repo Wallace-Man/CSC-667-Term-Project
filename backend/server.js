@@ -1,3 +1,4 @@
+require("dotenv").config();
 const homeRoutes = require("./routes/static/home.js");
 const gamesRoutes = require("./routes/static/games.js");
 const lobbyRoutes = require("./routes/static/lobby.js");
@@ -5,22 +6,34 @@ const authenticationRoutes = require("./routes/static/authentication.js");
 
 const testRoutes = require("./routes/test/index.js");
 
-
-require("dotenv").config();
-
+const express = require("express");
+const morgan = require("morgan");
 const path = require("path");
 const createError = require("http-errors");
+const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
 const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
+const initSockets = require("./sockets/init.js");
+const db = require("./db/connection.js");
 
-const express = require("express");
 const app = express();
 
-app.use("/test", testRoutes);
+//app.use("/test", testRoutes);
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+const sessionMiddleware = session({
+  store: new pgSession({ pgPromise: db }),
+  secret: "teamqUNO",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
+});
+
+app.use(sessionMiddleware);
+const server = initSockets(app, sessionMiddleware);
 
 if (process.env.NODE_ENV === "development") {
     const livereload = require("livereload");
@@ -50,7 +63,7 @@ app.use("/games", gamesRoutes);
 app.use("/lobby", lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
 
