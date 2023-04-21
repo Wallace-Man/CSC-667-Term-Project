@@ -37,15 +37,14 @@ router.get("/login", (request, response) => {
       });
 })
 
+
+
 router.post("/login", async (request, response) => {
   const {username, password } = request.body;
-
-  if(Users.findByUser(username)){console.log("Found one!!!");}
   try {
     const { id, email, password: hash } = await Users.findByUser(username);
-    const salt = await bcrypt.genSalt(SALT_ROUNDS);
-    const hash2 = await bcrypt.hash(password, salt);
-    const isValidUser = hash2.localeCompare(hash);
+    const isValidUser = await bcrypt.compare(password, hash);
+
     if (isValidUser) {
       request.session.user = {
         id,
