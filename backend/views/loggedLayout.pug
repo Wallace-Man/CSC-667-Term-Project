@@ -1,0 +1,14 @@
+html
+  head
+    title= title
+    link(rel='stylesheet' href='/stylesheets/home.css')
+    script(src='/scripts/bundle.js')
+  body
+    nav
+      ul.navbar
+        li.nav-item.left
+          a.nav-link(href='/') Home
+        li.nav-item.right.login
+          // When you log out, go back to home
+          a.nav-link(href='/') Log Out
+    block content
