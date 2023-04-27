@@ -1,5 +1,6 @@
 extends loggedLayout
 
+
 block content
   h1 Lobby Page(Authenticated)
   ul
@@ -13,3 +14,10 @@ block content
       a(href='/lobby') Lobby
     li
       a(href='/games/42') Game(42)
+
+  chat-container 
+      messages 
+      label
+        input(id="chatMessage" name="chat-message" placeholder="Message...")
+    script(src="../scripts/bundle.js" defer)
+

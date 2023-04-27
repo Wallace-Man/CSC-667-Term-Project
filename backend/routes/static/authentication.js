@@ -52,7 +52,7 @@ router.post("/login", async (request, response) => {
         email
       };
 
-      response.redirect("/");
+      response.redirect("/lobby");
     } else {
       throw "Credentials invalid";
     }

@@ -3,8 +3,8 @@ const homeRoutes = require("./routes/static/home.js");
 const gamesRoutes = require("./routes/static/games.js");
 const lobbyRoutes = require("./routes/static/lobby.js");
 const authenticationRoutes = require("./routes/static/authentication.js");
-
-const testRoutes = require("./routes/test/index.js");
+const isAuthenticated = require("./middleware/is-authenticated.js");
+const chatRoutes = require("./routes/static/chat.js");
 
 const express = require("express");
 const morgan = require("morgan");
@@ -59,9 +59,10 @@ app.use(express.static(path.join(__dirname, "", "static")));
 const rootRoutes = require("../backend/routes/root");
 
 app.use("/", homeRoutes);
-app.use("/games", gamesRoutes);
-app.use("/lobby", lobbyRoutes);
+app.use("/games", isAuthenticated, gamesRoutes);
+app.use("/lobby", isAuthenticated, lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
+app.use("/chat", chatRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);

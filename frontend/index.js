@@ -1,36 +1,38 @@
 import io from "socket.io-client";
+import events from "../backend/sockets/constants";
 
 const socket = io();
 
 const messageContainer = document.querySelector("#messages");
 
-socket.on("chat-message", ({ message, sender }) => {
-  console.log({ message, sender });
+socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
+  const entry = document.createElement("div");
 
-  const display = document.createElement("div");
-  const name = document.createElement("span");
-  name.innerText = sender;
+  const displayName = document.createElement("span");
+  displayName.innerText = username;
+  const displayMessage = document.createElement("span");
+  displayMessage.innerText = message;
+  const displayTimestamp = document.createElement("span");
+  displayTimestamp.innerText = timestamp;
 
-  const thing = document.createElement("div");
-  thing.innerText = message;
+  entry.append(displayName, displayMessage, displayTimestamp);
 
-  display.appendChild(name);
-  display.appendChild(thing);
-
-  messageContainer.append(display);
+  messageContainer.appendChild(entry);
 });
 
 document
   .querySelector("input#chatMessage")
   .addEventListener("keydown", (event) => {
-    if (event.keyCode === 13) {
-      const message = event.target.value;
-      event.target.value = "";
-
-      fetch("/chat/0", {
-        method: "post",
-        body: JSON.stringify({ message }),
-        headers: { "Content-Type": "application/json" },
-      });
+    if (event.keyCode !== 13) {
+      return;
     }
+
+    const message = event.target.value;
+    event.target.value = "";
+
+    fetch("/chat/0", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    });
   });
