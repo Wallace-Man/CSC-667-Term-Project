@@ -1,6 +1,7 @@
 extends loggedLayout
 
 
+
 block content
   p You are #{username} #{email}  #{id}
 
@@ -27,3 +28,10 @@ block content
         a(href="#") 
         | Join
         span 42
+
+  chat-container 
+      messages 
+      label
+        input(id="chatMessage" name="chat-message" placeholder="Message...")
+    script(src="../scripts/bundle.js" defer)
+
