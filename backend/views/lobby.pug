@@ -1,15 +1,28 @@
 extends loggedLayout
 
 block content
-  h1 Lobby Page(Authenticated)
-  ul
-    li
-      a(href='/') Home
-    li
-      a(href='/authentication/login') Login
-    li
-      a(href='/authentication/sign-up') SignUp
-    li
-      a(href='/lobby') Lobby
-    li
-      a(href='/games/42') Game(42)
+  p You are #{username} #{email}  #{id}
+
+  container 
+    row 
+      col-sm 
+        button.ms-btn
+          a(href="/api/games/create" id="create-game-link" class="ms-btn ms-action") Create Game
+          ul#game-list
+            // This loop might be wrong in PUG, view 1:07:12 in lecture 4/24
+            each game in games
+              li =
+                a(href="/api/games/${game.id}/join") 
+                  | Join
+                  span = game.id
+      chat-container 
+        messages 
+        label
+          input(id="chatMessage" name="chat-message" placeholder="Message...")
+
+  template(id= "available-game-item")
+    div
+      li
+        a(href="#") 
+        | Join
+        span 42

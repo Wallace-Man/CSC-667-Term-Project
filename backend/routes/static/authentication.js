@@ -23,10 +23,10 @@ router.post("/sign-up", async (request, response) => {
     const { id } = await Users.create(username, email, hash);
     request.session.user = {id, username, email,};
 
-    response.redirect("/");
+    response.redirect("/lobby");
   }catch(error){
     console.log({ error });
-    response.redirect("/");
+    response.redirect("/sign-up");
   }
 });
 
