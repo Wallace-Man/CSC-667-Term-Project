@@ -61,8 +61,8 @@ app.use(express.static(path.join(__dirname, "", "static")));
 const rootRoutes = require("../backend/routes/root");
 
 app.use("/", homeRoutes);
-app.use("/games", gamesRoutes);
-app.use("/lobby", lobbyRoutes);
+app.use("/games", isAuthenticated, gamesRoutes);
+app.use("/lobby", isAuthenticated, lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
 app.use("/chat", chatRoutes);
 
