@@ -3,7 +3,7 @@ import events from "../backend/sockets/constants";
 import { gameCreatedHandler } from "./games/created";
 
 const socket = io();
-gameCreatedHandler(socket);
+//gameCreatedHandler(socket);
 
 const messageContainer = document.querySelector("#messages");
 
@@ -22,9 +22,26 @@ socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
   messageContainer.appendChild(entry);
 });
 
-document
-  .querySelector("input#chatMessage")
-  .addEventListener("keydown", (event) => {
+// const myDiv = document.querySelector('#chatMessage');
+// console.log(messageContainer); 
+// console.log(myDiv); 
+
+// myDiv.addEventListener("keydown", (event) => {
+//   if (event.keyCode !== 13) {
+//     return;
+//   }
+
+//   const message = event.target.value;
+//   event.target.value = "";
+
+//   fetch("/chat/0", {
+//     method: "post",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ message }),
+//   });
+// });
+
+document.querySelector('#chatMessage').addEventListener("keydown", (event) => {
     if (event.keyCode !== 13) {
       return;
     }
