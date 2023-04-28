@@ -8,4 +8,11 @@ router.get("/", (request, response) => {
       });
 })
 
+router.get("/logout", (request, response) => {
+  response.render("home", {
+      title: "Home",
+      message: "Our first template.",
+    });
+})
+
 module.exports = router;
