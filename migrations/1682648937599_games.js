@@ -10,13 +10,8 @@ exports.up = (pgm) => {
         type: "boolean",
         default: false,
       },
-      title:{
-        type: "varchar(100)",
-        notNull: true,
-      },
       number_of_players: {
         type: "integer",
-        notNull: true,
       }
     });
   };

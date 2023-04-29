@@ -19,11 +19,11 @@ router.get("/", async(request, response) => {
 
 router.get("/create", async(request, response) => {
     const { id: user_id } = request.session.user;
-    const io = request.app.get("io");
+    //const io = request.app.get("io");
     try{
-        const { id: game_id, created_at } = await Games.create(user-id);
+        const { id: game_id } = await Games.create();
 
-        io.emit(GAME_CREATED, { game_id, created_at });
+        //io.emit(GAME_CREATED, { game_id });
         response.redirect(`/games/${game_id}`);
     }
     catch(error){
