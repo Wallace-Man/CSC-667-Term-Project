@@ -4,7 +4,7 @@ const gameList = document.querySelector("#game-list");
 const itemTemplate = document.querySelector("#available-game-item");
 
 
-export function createGameListItem(game_id, _created_at){
+export function createGameListItem(game_id){
     const entry = itemTemplate.content.cloneNode(true);
 
     entry.querySelector("a").setAttribute("href", `/api/games/${games.id}/join`);
@@ -14,9 +14,9 @@ export function createGameListItem(game_id, _created_at){
 };
 
 export function gameCreatedHandler(socket){
-    socket.on(GAME_CREATED, ({ game_id, created_at}) => {
+    socket.on(GAME_CREATED, ({ game_id}) => {
 
         gameList.appendChild(
-            createGameListItem(game_id, created_at));
+            createGameListItem(game_id));
     });
 };

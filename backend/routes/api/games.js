@@ -19,11 +19,11 @@ router.get("/", async(request, response) => {
 
 router.get("/create", async(request, response) => {
     const { id: user_id } = request.session.user;
-    //const io = request.app.get("io");
+    const io = request.app.get("io");
     try{
-        const { id: game_id } = await Games.create();
+        const { id: game_id } = await Games.create(user_id);
 
-        //io.emit(GAME_CREATED, { game_id });
+        io.emit(GAME_CREATED, { game_id });
         response.redirect(`/games/${game_id}`);
     }
     catch(error){
@@ -35,11 +35,10 @@ router.get("/create", async(request, response) => {
 router.get("/:id/join", async(request, response) => {
     const { id: game_id } = request.params;
     const { id: user_id } = request.session.user;
-
     try{
         await Games.join(game_id, user_id);
         response.redirect(`/games/${game_id}`);
-    }catch{
+    }catch(error){
         console.log({error});
         response.redirect("/lobby");
     }

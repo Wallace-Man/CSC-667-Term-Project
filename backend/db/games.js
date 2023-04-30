@@ -6,21 +6,21 @@ const INSERT_FIRST_USER_SQL = "INSERT INTO game_users(user_id, game_id, current_
 
 const create = async(creator_id) => {
     const { id } = await db.one(CREATE_GAME_SQL)
-    //await db.none(INSERT_FIRST_USER_SQL, [creator_id, id])
+    await db.none(INSERT_FIRST_USER_SQL, [creator_id, id])
     
     return { id };
 }
 
 const GAMES_LIST_SQL = `
-  SELECT g.id, g.created_at FROM games g, game_users gu 
+  SELECT g.id FROM games g, game_users gu 
   WHERE g.id=gu.game_id AND gu.user_id != $1 AND 
   (SELECT COUNT(*) FROM game_users WHERE game_users.game_id=g.id) = 1
 `;
 
-const list = async(user_id) => db.any(CREATE_GAME_SQL, [user_id]);
+const list = async(user_id) => db.any(GAMES_LIST_SQL, [user_id]);
 
-const JOIN_GAME_SQL = "INSERT INTO game_users {game_id, user_id) VALUES ($1, $2)";
-const join = (game_id, user_id) => db.none(GAME_GAME_SQL, [game_id, user_id]);
+const JOIN_GAME_SQL = "INSERT INTO game_users (game_id, user_id) VALUES ($1, $2)";
+const join = (game_id, user_id) => { db.none(JOIN_GAME_SQL, [game_id, user_id]) };
 
 
 module.exports = {create, list, join };

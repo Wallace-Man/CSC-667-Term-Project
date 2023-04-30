@@ -10,13 +10,13 @@ block content
       col-sm 
         button.ms-btn
           a(href="/api/games/create" id="create-game-link" class="ms-btn ms-action") Create Game
-          ul#game-list
+          ul(id="game-list")
             // This loop might be wrong in PUG, view 1:07:12 in lecture 4/24
             each game in games
-              li =
-                a(href="/api/games/${game.id}/join") 
-                  | Join
-                  span = game.id
+              li 
+                a(href=`/api/games/${game.id}/join`) 
+                  | Join Game 
+                  span #{game.id}
       chat-container 
         messages(id="messages") 
         label
