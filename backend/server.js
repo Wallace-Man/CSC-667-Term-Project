@@ -62,9 +62,12 @@ const rootRoutes = require("../backend/routes/root");
 
 app.use("/", homeRoutes);
 app.use("/games", isAuthenticated, gamesRoutes);
+app.use("/api/games", isAuthenticated, apiGamesRoutes);
 app.use("/lobby", isAuthenticated, lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
 app.use("/chat", chatRoutes);
+
+
 
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
