@@ -3,6 +3,7 @@ const db = require("./connection.js")
 //const CREATE_GAME_SQL = "INSERT INTO games (completed) VALUES (false) RETURNING *";
 const CREATE_GAME_SQL = "INSERT INTO games(closed, number_of_players) VALUES (false, 1) RETURNING id"
 const INSERT_FIRST_USER_SQL = "INSERT INTO game_users(user_id, game_id, current_player) VALUES ($1, $2, true)"
+const UPDATE_PLAYER_COUNT_SQL = "UPDATE games SET number_of_players = number_of_players + 1 WHERE id = $1"
 
 const create = async(creator_id) => {
     const { id } = await db.one(CREATE_GAME_SQL)
@@ -21,6 +22,6 @@ const list = async(user_id) => db.any(GAMES_LIST_SQL, [user_id]);
 
 const JOIN_GAME_SQL = "INSERT INTO game_users (game_id, user_id) VALUES ($1, $2)";
 const join = (game_id, user_id) => { db.none(JOIN_GAME_SQL, [game_id, user_id]) };
+const updatePlayerCount = (game_id) => { db.none(UPDATE_PLAYER_COUNT_SQL, [game_id])}
 
-
-module.exports = {create, list, join };
+module.exports = {create, list, join, updatePlayerCount};

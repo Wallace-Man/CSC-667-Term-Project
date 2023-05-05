@@ -4,15 +4,20 @@
  * @param {import("node-pg-migrate/dist/types").MigrationBuilder} pgm
  */
 exports.up = (pgm) => {
-    pgm.createTable("games", {
+    pgm.createTable("gameboard", {
       id: "id",
-      closed: {
+      clockwise: {
         type: "boolean",
-        default: false,
+        notNull: true,
+        default: true,
       },
-      number_of_players: {
+      game_id: {
         type: "integer",
-      }
+        notNull: true,
+      },
+      uno_card_id: {
+        type: "integer",
+      },
     });
   };
   
@@ -20,5 +25,5 @@ exports.up = (pgm) => {
    * @param {import("node-pg-migrate/dist/types").MigrationBuilder} pgm
    */
   exports.down = (pgm) => {
-    pgm.dropTable("games");
+    pgm.dropTable("gameboard");
   };
