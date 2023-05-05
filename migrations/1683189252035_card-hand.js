@@ -4,7 +4,8 @@
  * @param {import("node-pg-migrate/dist/types").MigrationBuilder} pgm
  */
 exports.up = (pgm) => {
-    pgm.createTable("game_users", {
+    pgm.createTable("card_hand", {
+      id: "id",
       user_id: {
         type: "integer",
         notNull: true,
@@ -13,14 +14,9 @@ exports.up = (pgm) => {
         type: "integer",
         notNull: true,
       },
-      current_player: {
-        type: "boolean",
-        default: false,
-      },
-      number_of_cards: {
+      uno_card_id: {
         type: "integer",
         notNull: true,
-        default: 0,
       }
     });
   };
@@ -29,5 +25,5 @@ exports.up = (pgm) => {
    * @param {import("node-pg-migrate/dist/types").MigrationBuilder} pgm
    */
   exports.down = (pgm) => {
-    pgm.dropTable("game_users");
+    pgm.dropTable("card_hand");
   };

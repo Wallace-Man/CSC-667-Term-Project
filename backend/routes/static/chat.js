@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const events = require("../../sockets/constants.js");
+const events = require("../../../shared/constants.js");
 const Chat = require("../../db/chat.js");
 
 router.post("/:id", async (request, response) => {

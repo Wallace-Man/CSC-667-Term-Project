@@ -1,85 +1,85 @@
 body {
-	background-color: rgba(0, 0, 255, 0.1);
+  background-color: rgba(0, 0, 255, 0.1);
 }
 .navbar {
-	display: flex;
-	justify-content: space-between;
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	font-size: 30;
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 30;
 }
-  
+
 .nav-item.left {
-	margin-right: auto;
+  margin-right: auto;
 }
 
 .nav-item.right.login {
-	margin-right: 1rem;
+  margin-right: 1rem;
 }
 
-.nav-item.right.signup{
-	margin-left: 1rem;
+.nav-item.right.signup {
+  margin-left: 1rem;
 }
-  
+
 .nav-link {
-	text-decoration: none;
-	color: #333;
-	font-weight: bold;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
 }
 
 ul {
-	display: inline;
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
+  display: inline;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
-.text-center{
-	padding:10px;
-  	border-radius:10px;
-	margin:10px 0;
+.text-center {
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
 }
-div{
-	text-align: center;
-	display: inline;
-	list-style-type: none;
-	padding: 0;
-	font-size: 100;
-	margin-top: 100000000000rem;
+div {
+  text-align: center;
+  /* display: inline; */
+  list-style-type: none;
+  padding: 0;
 }
-div1{
-	text-align: center;
-	display: inline;
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	font-size: 70;
+div1 {
+  text-align: center;
+  display: inline;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  font-size: 70;
 }
 
-button1{
-	display: flex;
-	justify-content: center;
+button1 {
+  display: flex;
+  justify-content: center;
 }
 
-button2{
-	display: flex;
-	justify-content: center;
+button2 {
+  display: flex;
+  justify-content: center;
 }
 
-.btn{
-	display: inline;
-	list-style-type: none;
-	background-color: #b119cf;
-  	border: none;
-  	color: white;
-  	padding: 10px 20px;
-  	text-align: center;
-  	text-decoration: none;
-  	display: inline-block;
-  	font-size: 20px;
-	border-radius: 10px;
+.btn {
+  display: inline;
+  list-style-type: none;
+  background-color: #b119cf;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  border-radius: 10px;
 }
-.btn:hover {background-color: #b626da}
+.btn:hover {
+  background-color: #b626da;
+}
 
 .btn:active {
   background-color: #8e21af;
@@ -87,15 +87,21 @@ button2{
   transform: translateY(4px);
 }
 
-label{
-	font-size:20;
-	display: inline-block;
-	width: 200px;
+label {
+  font-size: 20;
+  display: inline-block;
+  width: 200px;
 }
 
-input{
-	padding:10px;
-  	border-radius:10px;
-	margin:10px 0;
-	align-self: right;
+input {
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+  align-self: right;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }

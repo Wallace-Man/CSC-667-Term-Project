@@ -4,9 +4,8 @@ const gamesRoutes = require("./routes/static/games.js");
 const lobbyRoutes = require("./routes/static/lobby.js");
 const authenticationRoutes = require("./routes/static/authentication.js");
 const chatRoutes = require("./routes/static/chat.js");
-const apiGamesRoutes = require("./routes/api/games.js")
+const apiGamesRoutes = require("./routes/api/games.js");
 const isAuthenticated = require("./middleware/is-authenticated.js");
-
 
 const express = require("express");
 const morgan = require("morgan");
@@ -38,19 +37,19 @@ app.use(sessionMiddleware);
 const server = initSockets(app, sessionMiddleware);
 
 if (process.env.NODE_ENV === "development") {
-    const livereload = require("livereload");
-    const connectLiveReload = require("connect-livereload");
-  
-    const liveReloadServer = livereload.createServer();
-    liveReloadServer.watch(path.join(__dirname, "backend", "static"));
-    liveReloadServer.server.once("connection", () => {
-      setTimeout(() => {
-        liveReloadServer.refresh("/");
-      }, 100);
-    });
-  
-    app.use(connectLiveReload());
-  }
+  const livereload = require("livereload");
+  const connectLiveReload = require("connect-livereload");
+
+  const liveReloadServer = livereload.createServer();
+  liveReloadServer.watch(path.join(__dirname, "backend", "static"));
+  liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+      liveReloadServer.refresh("/");
+    }, 100);
+  });
+
+  app.use(connectLiveReload());
+}
 
 const PORT = process.env.PORT || 3000;
 
@@ -67,12 +66,10 @@ app.use("/lobby", isAuthenticated, lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
 app.use("/chat", chatRoutes);
 
-
-
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
 
 app.use((request, response, next) => {
-    next(createError(404));
-  });
+  next(createError(404));
+});
