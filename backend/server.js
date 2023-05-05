@@ -37,19 +37,19 @@ app.use(sessionMiddleware);
 const server = initSockets(app, sessionMiddleware);
 
 if (process.env.NODE_ENV === "development") {
-    const livereload = require("livereload");
-    const connectLiveReload = require("connect-livereload");
-  
-    const liveReloadServer = livereload.createServer();
-    liveReloadServer.watch(path.join(__dirname, "backend", "static"));
-    liveReloadServer.server.once("connection", () => {
-      setTimeout(() => {
-        liveReloadServer.refresh("/");
-      }, 100);
-    });
-  
-    app.use(connectLiveReload());
-  }
+  const livereload = require("livereload");
+  const connectLiveReload = require("connect-livereload");
+
+  const liveReloadServer = livereload.createServer();
+  liveReloadServer.watch(path.join(__dirname, "backend", "static"));
+  liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+      liveReloadServer.refresh("/");
+    }, 100);
+  });
+
+  app.use(connectLiveReload());
+}
 
 const PORT = process.env.PORT || 3000;
 
@@ -71,5 +71,5 @@ server.listen(PORT, () => {
 });
 
 app.use((request, response, next) => {
-    next(createError(404));
-  });
+  next(createError(404));
+});

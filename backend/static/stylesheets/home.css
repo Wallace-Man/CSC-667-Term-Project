@@ -41,7 +41,7 @@ ul {
 }
 div {
   text-align: center;
-  display: inline;
+  /* display: inline; */
   list-style-type: none;
   padding: 0;
 }

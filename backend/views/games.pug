@@ -15,8 +15,19 @@ block content
       a(href="/games/42") Game(42)
 
   #game-area
-  .chat-container 
-    |
-    #messages.messages 
-    label
-      input#chatMessage(name="chat-message", placeholder="Message...")
+    #discard-area
+
+  .chat-container
+    #messages.messages
+      label
+        input#chatMessage(name="chat-message", placeholder="Message...")
+
+  template#player-template
+    .player(data-id="")
+      .gravatar
+        img(src="")
+      span.name
+      .hand
+
+  template#card-template
+    .card

@@ -1,9 +1,9 @@
 import io from "socket.io-client";
-import events from "../backend/sockets/constants";
-import { gameCreatedHandler } from "./games/created";
+import events from "../shared/constants";
+import game_updated from "./games/updated";
 
-const socket = io();
-//gameCreatedHandler(socket);
+const socket = io({ query: { path: window.location.pathname } });
+socket.on(events.GAME_UPDATED, game_updated);
 
 const messageContainer = document.querySelector("#messages");
 
@@ -22,18 +22,17 @@ socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
   messageContainer.appendChild(entry);
 });
 
+document.querySelector("#chatMessage").addEventListener("keydown", (event) => {
+  if (event.keyCode !== 13) {
+    return;
+  }
 
-document.querySelector('#chatMessage').addEventListener("keydown", (event) => {
-    if (event.keyCode !== 13) {
-      return;
-    }
+  const message = event.target.value;
+  event.target.value = "";
 
-    const message = event.target.value;
-    event.target.value = "";
-
-    fetch("/chat/0", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
+  fetch("/chat/0", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
   });
+});
