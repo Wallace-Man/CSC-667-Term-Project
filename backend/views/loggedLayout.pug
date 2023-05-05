@@ -1,14 +1,15 @@
 html
   head
     title= title
-    link(rel='stylesheet' href='/stylesheets/home.css')
-    script(src='/scripts/bundle.js')
+    link(rel="stylesheet", href="/stylesheets/home.css")
+    script(src="/scripts/bundle.js", defer)
+    block scripts
   body
     nav
       ul.navbar
         li.nav-item.left
-          a.nav-link(href='/lobby') Home
+          a.nav-link(href="/lobby") Home
         li.nav-item.right.login
           // When you log out, go back to home
-          a.nav-link(href='/logout') Log Out
+          a.nav-link(href="/logout") Log Out
     block content

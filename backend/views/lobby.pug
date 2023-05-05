@@ -1,33 +1,35 @@
 extends loggedLayout
 
-
-
 block content
-  p You are #{username} #{email}  #{id}
+  p You are #{ username } #{ email } #{ id }
 
-  container 
-    row 
-      col-sm 
+  .container 
+    |
+    .row 
+      |
+      .col-sm 
+        |
         button.ms-btn
-          a(href="/api/games/create" id="create-game-link" class="ms-btn ms-action") Create Game
-          ul(id="game-list")
-            // This loop might be wrong in PUG, view 1:07:12 in lecture 4/24
-            each game in games
-              li 
-                a(href=`/api/games/${game.id}/join`) 
-                  | Join Game 
-                  span #{game.id}
-      chat-container 
-        messages(id="messages") 
-        label
-          input(id="chatMessage" name="chat-message" placeholder="Message...")
-      script(src="../scripts/bundle.js" defer)
-  template(id= "available-game-item")
+          a#create-game-link.ms-btn.ms-action(href="/api/games/create") Create Game
+        ul#game-list
+          // This loop might be wrong in PUG, view 1:07:12 in lecture 4/24
+          each game in games
+            li
+              a(href=`/api/games/${game.id}/join`) 
+                |
+                | Join Game
+                span #{ game.id }
+      .col-sm 
+        |
+        .chat-container 
+          |
+          #messages.messages 
+          label
+            input#chatMessage(name="chat-message", placeholder="Message...")
+      script(src="../scripts/bundle.js", defer)
+  template#available-game-item
     div
       li
         a(href="#") 
         | Join
         span 42
-
-
-
