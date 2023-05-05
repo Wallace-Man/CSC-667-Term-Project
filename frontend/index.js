@@ -22,24 +22,6 @@ socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
   messageContainer.appendChild(entry);
 });
 
-// const myDiv = document.querySelector('#chatMessage');
-// console.log(messageContainer); 
-// console.log(myDiv); 
-
-// myDiv.addEventListener("keydown", (event) => {
-//   if (event.keyCode !== 13) {
-//     return;
-//   }
-
-//   const message = event.target.value;
-//   event.target.value = "";
-
-//   fetch("/chat/0", {
-//     method: "post",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ message }),
-//   });
-// });
 
 document.querySelector('#chatMessage').addEventListener("keydown", (event) => {
     if (event.keyCode !== 13) {
