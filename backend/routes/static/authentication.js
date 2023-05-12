@@ -7,40 +7,38 @@ const router = express.Router();
 const SALT_ROUNDS = 10;
 
 router.get("/sign-up", (request, response) => {
-    response.render("sign-up", {
-        title: "Sign Up",
-        message: "Our first template.",
-      });
-})
+  response.render("sign-up", {
+    title: "Sign Up",
+    message: "Our first template.",
+  });
+});
 
 router.post("/sign-up", async (request, response) => {
-  const { username, email, password} = request.body;
+  const { username, email, password } = request.body;
 
   const salt = await bcrypt.genSalt(SALT_ROUNDS);
   const hash = await bcrypt.hash(password, salt);
 
-  try{
+  try {
     const { id } = await Users.create(username, email, hash);
-    request.session.user = {id, username, email,};
+    request.session.user = { id, username, email };
 
     response.redirect("/lobby");
-  }catch(error){
+  } catch (error) {
     console.log({ error });
     response.redirect("/sign-up");
   }
 });
 
 router.get("/login", (request, response) => {
-    response.render("login", {
-        title: "Login",
-        message: "Our first template.",
-      });
-})
-
-
+  response.render("login", {
+    title: "Login",
+    message: "Our first template.",
+  });
+});
 
 router.post("/login", async (request, response) => {
-  const {username, password } = request.body;
+  const { username, password } = request.body;
   try {
     const { id, email, password: hash } = await Users.findByUser(username);
     const isValidUser = await bcrypt.compare(password, hash);
@@ -49,7 +47,7 @@ router.post("/login", async (request, response) => {
       request.session.user = {
         id,
         username,
-        email
+        email,
       };
 
       response.redirect("/lobby");
@@ -62,6 +60,5 @@ router.post("/login", async (request, response) => {
     response.render("login", { title: "TeamQ Term Project", username });
   }
 });
-
 
 module.exports = router;

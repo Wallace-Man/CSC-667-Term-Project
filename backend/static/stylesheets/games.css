@@ -1,0 +1,136 @@
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+.chat-container {
+  flex-grow: 1;
+}
+
+#game-area {
+  flex-grow: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+#cards-container {
+  height: 150px;
+  display: flex;
+  flex-direction: row;
+}
+
+#deck-area {
+  flex-grow: 1;
+}
+
+#discard-area {
+  flex-grow: 1;
+}
+
+#player-area {
+  display: flex;
+  flex-direction: row;
+}
+
+.player {
+  flex-grow: 1;
+}
+
+.player.current-player {
+  border: 2px solid green;
+  border-radius: 5px;
+}
+
+.player .gravatar img {
+  border-radius: 10px;
+}
+
+.card {
+  height: 150px;
+  width: 100px;
+  background-image: url(/images/cards.png);
+}
+
+/* Yellow */
+.card.color-2 {
+  background-position-y: -150px;
+}
+
+/* Green */
+.card.color-3 {
+  background-position-y: -300px;
+}
+
+/* Blue */
+.card.color-4 {
+  background-position-y: -450px;
+}
+
+.card.number-1 {
+  background-position-x: -100px;
+}
+
+.card.number-2 {
+  background-position-x: -200px;
+}
+
+.card.number-3 {
+  background-position-x: -300px;
+}
+
+.card.number-4 {
+  background-position-x: -400px;
+}
+
+.card.number-5 {
+  background-position-x: -500px;
+}
+
+.card.number-6 {
+  background-position-x: -600px;
+}
+
+.card.number-7 {
+  background-position-x: -700px;
+}
+
+.card.number-8 {
+  background-position-x: -800px;
+}
+
+.card.number-9 {
+  background-position-x: -900px;
+}
+
+.card.number-10 {
+  background-position-x: -1000px;
+}
+
+.card.number-11 {
+  background-position-x: -1100px;
+}
+
+.card.number-12 {
+  background-position-x: -1200px;
+}
+
+.card.number-13 {
+  background-position-x: -1300px;
+}
+
+.card.number-14 {
+  background-position-x: -1400px;
+}
+
+.hand .card:first-of-type {
+  margin-left: 0;
+}
+
+.hand .card {
+  display: inline-block;
+  margin-left: -60px;
+}
+
+.card.number--99 {
+  background-position-x: 100px;
+}

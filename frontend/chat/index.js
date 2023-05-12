@@ -1,9 +1,5 @@
-import io from "socket.io-client";
-import events from "../shared/constants";
-import game_updated from "./games/updated";
-
-const socket = io({ query: { path: window.location.pathname } });
-socket.on(events.GAME_UPDATED, game_updated);
+import socket from "../common";
+import events from "../../shared/constants";
 
 const messageContainer = document.querySelector("#messages");
 

@@ -1,6 +1,7 @@
 import md5 from "blueimp-md5";
 
-const gameTable = document.querySelector("#game-area");
+const deckArea = document.querySelector("#deck-area");
+const playerArea = document.querySelector("#player-area");
 const playerTemplate = document.querySelector("#player-template");
 const cardTemplate = document.querySelector("#card-template");
 
@@ -8,7 +9,19 @@ const discardArea = document.querySelector("#discard-area");
 
 let initialized = false;
 
+const createCard = (color, number) => {
+  const card = cardTemplate.content.cloneNode(true).querySelector(".card");
+
+  card.dataset.color = color;
+  card.dataset.number = number;
+  card.classList.add(`color-${color}`, `number-${number}`);
+
+  return card;
+};
+
 const initializeGameTable = (gameState) => {
+  const { game_id } = gameState;
+
   gameState.players.forEach(({ current_player, email, id, me, username }) => {
     const player = playerTemplate.content
       .cloneNode(true)
@@ -21,16 +34,30 @@ const initializeGameTable = (gameState) => {
     }
     if (me) {
       player.classList.add("its-a-me");
+
+      player.querySelector(".hand").addEventListener("click", (event) => {
+        if (!event.target.classList.contains("card") || !current_player) {
+          return;
+        }
+
+        fetch(`/api/games/${game_id}/play`, {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(event.target.dataset),
+        });
+      });
     }
 
     player.querySelector(
       ".gravatar img"
-    ).src = `http://www.gravatar.com/avatar/${md5(email)}.png`;
+    ).src = `http://www.gravatar.com/avatar/${md5(email)}.png?s=40`;
 
     player.querySelector("span.name").innerText = username;
 
-    gameTable.appendChild(player);
+    playerArea.appendChild(player);
   });
+
+  deckArea.appendChild(createCard("-99", "-99"));
 
   initialized = true;
 };
@@ -44,13 +71,7 @@ const removeAllChildren = (element) => {
 const updateDiscard = ({ card_color, card_number }) => {
   removeAllChildren(discardArea);
 
-  const discardCard = cardTemplate.content
-    .cloneNode(true)
-    .querySelector(".card");
-
-  discardCard.innerText = `DISCARD card_color: ${card_color}, card_number: ${card_number}`;
-
-  discardArea.appendChild(discardCard);
+  discardArea.appendChild(createCard(card_color, card_number));
 };
 
 const updatePlayers = (players, cards) => {
@@ -69,15 +90,12 @@ const updatePlayers = (players, cards) => {
     if (me) {
       removeAllChildren(hand);
       cards.forEach(({ card_color, card_number }) => {
-        const element = cardTemplate.content
-          .cloneNode(true)
-          .querySelector(".card");
-
-        element.innerText = `card_color: ${card_color}, card_number: ${card_number}`;
-        hand.appendChild(element);
+        hand.appendChild(createCard(card_color, card_number));
       });
     } else {
-      hand.innerText = `${card_count} cards`;
+      for (let i = 0; i < card_count; i++) {
+        hand.appendChild(createCard("-99", "-99"));
+      }
     }
   });
 };
