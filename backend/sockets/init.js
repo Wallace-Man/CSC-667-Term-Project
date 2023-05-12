@@ -12,16 +12,23 @@ const initSockets = (app, sessionMiddleware) => {
 
   io.on("connection", (socket) => {
     let game_id = socket.handshake.query.path.substring(1);
-    const user_id = socket.request.session.user.id;
-
+    let user_id = 0
     if (game_id === "lobby") {
+      game_id = 0;
+      user_id = socket.request.session.user.id;
+    }
+    else if(typeof game_id === "string") {
       game_id = 0;
     } else {
       game_id = parseInt(game_id.substring(game_id.lastIndexOf("/") + 1));
+      user_id = socket.request.session.user.id;
     }
 
-    Sockets.add(game_id, user_id, socket.id);
-
+    if(user_id != 0)
+    {
+      Sockets.add(game_id, user_id, socket.id);
+    }
+     
     if (game_id !== 0) {
       Games.state(game_id).then(({ lookup }) => {
         socket.emit(GAME_UPDATED, lookup(user_id));
