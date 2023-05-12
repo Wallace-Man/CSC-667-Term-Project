@@ -97,6 +97,7 @@ const state = async (game_id) => {
 
   return {
     lookup: (user_id) => ({
+      game_id,
       me: user_id,
       connection: connections.find(
         (connection) => connection.user_id === user_id

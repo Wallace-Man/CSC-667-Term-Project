@@ -36,20 +36,6 @@ router.get("/create", async (request, response) => {
   }
 });
 
-router.get("/:id/ping", async (request, response) => {
-  response.status(200).send();
-
-  const { id: game_id } = request.params;
-  const { id: user_id } = request.session.user;
-  const io = request.app.get("io");
-
-  const { connections, lookup } = await Games.state(parseInt(game_id));
-
-  connections.forEach(({ user_id: connection_user_id, socket_id }) => {
-    io.to(socket_id).emit(GAME_UPDATED, lookup(connection_user_id));
-  });
-});
-
 router.get("/:id/join", async (request, response) => {
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
@@ -69,11 +55,6 @@ router.get("/:id/join", async (request, response) => {
       const { connections, lookup } = await Games.state(parseInt(game_id));
 
       connections.forEach(({ user_id: connection_user_id, socket_id }) => {
-        console.log({
-          connection_user_id,
-          socket_id,
-          l: lookup(connection_user_id),
-        });
         io.to(socket_id).emit(GAME_UPDATED, lookup(connection_user_id));
       });
     }
@@ -109,20 +90,23 @@ router.get("/:id/draw", async(request, response) => {
 }); 
 */
 
-/*
-router.get("/:id/play", async(request, response) => {
-    //check if user is in game
+router.post("/:id/play", async (request, response) => {
+  const { color, number } = request.body;
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
 
-    //check if it is the user's turn
-    
-    //check if the card played is valid
+  console.log({ user_id, game_id, color, number });
 
-    //play the card and remove from player's hand
+  response.status(200).send();
+  //check if user is in game
+  //check if it is the user's turn
+  //check if the card played is valid
+  //play the card and remove from player's hand
+  //check if player has 0 cards left in hand, they win and game is over
+  //end turn
 
-    //check if player has 0 cards left in hand, they win and game is over
-
-    //end turn
+  // emit game updated message
 });
-*/
 
 module.exports = router;

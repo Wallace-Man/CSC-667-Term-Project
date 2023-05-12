@@ -13,4 +13,3 @@ module.exports = {
   create,
   findByUser,
 };
-  

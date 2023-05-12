@@ -1,4 +1,5 @@
 import socket from "../common";
+import events from "../../shared/constants";
 
 const messageContainer = document.querySelector("#messages");
 

@@ -2,8 +2,8 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    chat: "./frontend/chat/index.js",
-    games: "./frontend/games/index.js",
+    chat: { import: path.join(__dirname, "frontend", "chat", "index.js") },
+    games: { import: path.join(__dirname, "frontend", "games", "index.js") },
   },
   output: {
     path: path.join(__dirname, "backend", "static", "scripts"),

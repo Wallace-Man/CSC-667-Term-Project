@@ -1,5 +1,8 @@
 extends loggedLayout
 
+block css
+  link(rel="stylesheet", href="/stylesheets/games.css")
+
 block scripts
   script(src="/scripts/games.js", defer)
 
@@ -17,19 +20,23 @@ block content
     li
       a(href="/games/42") Game(42)
 
-  #game-area
-    #discard-area
+  main
+    #game-area
+      #cards-container
+        #deck-area
+        #discard-area
+      #player-area
 
-  .chat-container
-    #messages.messages
-      label
-        input#chatMessage(name="chat-message", placeholder="Message...")
+    .chat-container
+      #messages.messages
+        label
+          input#chatMessage(name="chat-message", placeholder="Message...")
 
   template#player-template
     .player(data-id="")
       .gravatar
+        span.name
         img(src="")
-      span.name
       .hand
 
   template#card-template
