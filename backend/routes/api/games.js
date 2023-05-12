@@ -36,6 +36,20 @@ router.get("/create", async (request, response) => {
   }
 });
 
+router.get("/:id/ping", async (request, response) => {
+  response.status(200).send();
+
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  const { connections, lookup } = await Games.state(parseInt(game_id));
+
+  connections.forEach(({ user_id: connection_user_id, socket_id }) => {
+    io.to(socket_id).emit(GAME_UPDATED, lookup(connection_user_id));
+  });
+});
+
 router.get("/:id/join", async (request, response) => {
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
@@ -47,17 +61,25 @@ router.get("/:id/join", async (request, response) => {
 
     const { count } = await Games.countPlayers(game_id);
 
+    response.redirect(`/games/${game_id}`);
+
     if (parseInt(count) === MAX_PLAYERS) {
       io.emit(GAME_STARTING, { id: game_id });
 
+      console.log("Emitted GAME_STARTING for " + user_id);
       const { connections, lookup } = await Games.state(parseInt(game_id));
 
+      console.log({ connections, lookup });
+
       connections.forEach(({ user_id: connection_user_id, socket_id }) => {
+        console.log({
+          connection_user_id,
+          socket_id,
+          l: lookup(connection_user_id),
+        });
         io.to(socket_id).emit(GAME_UPDATED, lookup(connection_user_id));
       });
     }
-
-    response.redirect(`/games/${game_id}`);
   } catch (error) {
     console.log({ error });
     response.redirect("/lobby");

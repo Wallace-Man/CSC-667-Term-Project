@@ -4,6 +4,9 @@ import game_updated from "./games/updated";
 
 const socket = io({ query: { path: window.location.pathname } });
 socket.on(events.GAME_UPDATED, game_updated);
+socket.on(events.GAME_STARTING, (data) =>
+  console.log(events.GAME_STARTING, { data })
+);
 
 const messageContainer = document.querySelector("#messages");
 

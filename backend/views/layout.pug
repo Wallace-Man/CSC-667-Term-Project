@@ -1,15 +1,14 @@
 html
   head
     title= title
-    link(rel='stylesheet' href='/stylesheets/home.css')
-    script(src='/scripts/bundle.js')
+    link(rel="stylesheet", href="/stylesheets/home.css")
   body
     nav
       ul.navbar
         li.nav-item.left
-          a.nav-link(href='/') Home
+          a.nav-link(href="/") Home
         li.nav-item.right.login
-          a.nav-link(href='/authentication/login') Login
+          a.nav-link(href="/authentication/login") Login
         li.nav-item.right.signup
-          a.nav-link(href='/authentication/sign-up') Sign Up
+          a.nav-link(href="/authentication/sign-up") Sign Up
     block content

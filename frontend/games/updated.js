@@ -83,6 +83,7 @@ const updatePlayers = (players, cards) => {
 };
 
 const updated = (gameState) => {
+  console.log(gameState);
   if (!initialized) {
     initializeGameTable(gameState);
   }
