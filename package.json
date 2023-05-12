@@ -50,6 +50,6 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown",
-    "frontend/**/*.js": "webpack"
+    "frontend/**/*.js": "npm run build"
   }
 }

@@ -66,10 +66,7 @@ router.get("/:id/join", async (request, response) => {
     if (parseInt(count) === MAX_PLAYERS) {
       io.emit(GAME_STARTING, { id: game_id });
 
-      console.log("Emitted GAME_STARTING for " + user_id);
       const { connections, lookup } = await Games.state(parseInt(game_id));
-
-      console.log({ connections, lookup });
 
       connections.forEach(({ user_id: connection_user_id, socket_id }) => {
         console.log({

@@ -1,5 +1,8 @@
 extends loggedLayout
 
+block scripts
+  script(src="/scripts/games.js", defer)
+
 block content
   h1 Game #{ id } (Authenticated)
   ul
