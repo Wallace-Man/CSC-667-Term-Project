@@ -1,6 +1,5 @@
 const db = require("./connection.js");
 
-//const CREATE_GAME_SQL = "INSERT INTO games (completed) VALUES (false) RETURNING *";
 const CREATE_GAME_SQL =
   "INSERT INTO games(closed, number_of_players) VALUES (false, 1) RETURNING id";
 const INSERT_FIRST_USER_SQL =
