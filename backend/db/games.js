@@ -115,4 +115,64 @@ const state = async (game_id) => {
   };
 };
 
-module.exports = { create, list, join, updatePlayerCount, countPlayers, state };
+
+const checkValidPlayer = (game_id, user_id) => {
+  return db.one("SELECT COUNT(*) FROM game_users WHERE game_id=$1 AND user_id=$2", [game_id, user_id])
+  .then(result => {
+    const count = parseInt(result.count);
+    return count;
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}
+
+const checkPlayerTurn = (game_id, user_id) => {
+  return db.one("SELECT COUNT(*) FROM game_users WHERE game_id=$1 AND user_id=$2 AND current_player=true", [game_id, user_id])
+  .then(result => {
+    const count = parseInt(result.count);
+    return count;
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}
+
+const getDiscardCard = (game_id) => {
+  return db.one("SELECT card_hand.uno_card_id FROM card_hand WHERE user_id=-1 AND game_id=$1", [game_id])
+  .then(result => {
+    const discard_card_id = parseInt(result.uno_card_id);
+    //console.log(discard_card_id);
+    return discard_card_id;
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}
+
+const checkValidCard = (color, number, discard_card_id) => {
+  return db.one("SELECT * FROM uno_cards WHERE id=$1", [discard_card_id])
+  .then(result => {
+    const discard_card = result;
+    return discard_card;
+  })
+  .then(discard_card => {
+    if(number == 13 || number == 14)
+    {
+      return 1;
+    }
+    else if(color == discard_card.card_color || number == discard_card.card_number)
+    {
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+};
+
+module.exports = { create, list, join, updatePlayerCount, countPlayers, state, checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard };

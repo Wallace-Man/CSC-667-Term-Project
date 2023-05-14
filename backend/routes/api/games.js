@@ -95,13 +95,30 @@ router.post("/:id/play", async (request, response) => {
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
   const io = request.app.get("io");
-
   console.log({ user_id, game_id, color, number });
-
   response.status(200).send();
   //check if user is in game
+  if(!await Games.checkValidPlayer(game_id, user_id))
+  {
+    console.log("Not a valid player")
+    return -1;
+  };
+
   //check if it is the user's turn
+  if(!await Games.checkPlayerTurn(game_id, user_id))
+  {
+    console.log("Not player's turn")
+    return -1;
+  };
+
   //check if the card played is valid
+  let discard_card_id = await Games.getDiscardCard(game_id);
+  if(!await Games.checkValidCard(color, number, discard_card_id))
+  {
+    console.log("Not a valid card");
+    return -1;
+  }
+  
   //play the card and remove from player's hand
   //check if player has 0 cards left in hand, they win and game is over
   //end turn
