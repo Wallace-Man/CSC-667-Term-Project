@@ -39,11 +39,13 @@ const initializeGameTable = (gameState) => {
         if (!event.target.classList.contains("card") || !current_player) {
           return;
         }
+        
+        const requestBody = {...event.target.dataset, players: gameState.players}
 
         fetch(`/api/games/${game_id}/play`, {
           method: "post",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(event.target.dataset),
+          body: JSON.stringify(requestBody),
         });
       });
     }

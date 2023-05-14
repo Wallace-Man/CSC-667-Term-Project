@@ -60,7 +60,6 @@ const state = async (game_id) => {
   // players in the game
   // which player's turn it is
   const player_data = await db.many(GAME_PLAYERS, [game_id]);
-
   // cards in the players hands
   const hands_data = await db.many(
     "SELECT * FROM card_hand, uno_cards WHERE card_hand.game_id=$1 AND card_hand.user_id IN ($2:csv) AND uno_cards.id=card_hand.uno_card_id",
@@ -179,4 +178,23 @@ const playCard = (game_id, user_id, discard_card_id, uno_card_id) => {
   db.none("UPDATE card_hand SET user_id = -1 WHERE game_id=$1 AND user_id=$2 AND uno_card_id=$3", [game_id, user_id, uno_card_id]);
 };
 
-module.exports = { create, list, join, updatePlayerCount, countPlayers, state, checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard, playCard};
+const checkHandCount = (game_id, user_id) => {
+  return db.one("SELECT COUNT(*) FROM card_hand WHERE game_id=$1 AND user_id=$2", [game_id, user_id])
+  .then(result => {
+    const hand_count = parseInt(result.count)
+    return hand_count
+  })
+  .then(hand_count => {
+    if(hand_count == 0)
+    {
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
+  })
+}
+
+module.exports = { create, list, join, updatePlayerCount, countPlayers, state, 
+  checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard, playCard, checkHandCount};

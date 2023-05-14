@@ -91,11 +91,21 @@ router.get("/:id/draw", async(request, response) => {
 */
 
 router.post("/:id/play", async (request, response) => {
-  const { color, number, uno_card_id } = request.body;
+  const { color, number, uno_card_id, players } = request.body;
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
   const io = request.app.get("io");
-  console.log({ user_id, game_id, color, number, uno_card_id });
+  let currentPlayerID;
+  let currentPlayerIndex;
+  console.log({ user_id, game_id, color, number, uno_card_id, players});
+  for(let i = 0; i < players.length; i++)
+  {
+    if(players[i].current_player)
+    {
+      currentPlayerID = players[i].id;
+      currentPlayerIndex = i;
+    }
+  }
   response.status(200).send();
   //check if user is in game
   if(!await Games.checkValidPlayer(game_id, user_id))
@@ -120,10 +130,15 @@ router.post("/:id/play", async (request, response) => {
   }
 
   //play the card and remove from player's hand
-  //let playing_card_id = await Games.getPlayingCardID(game_id);
   await Games.playCard(game_id, user_id, discard_card_id, uno_card_id);
+
   //check if player has 0 cards left in hand, they win and game is over
-  //end turn
+  if(!await Games.checkHandCount(game_id, user_id))
+  {
+    console.log("Player: " + user_id + " has cards left");
+  };
+  
+  //Apply card effect and end turn
 
   // emit game updated message
 });
