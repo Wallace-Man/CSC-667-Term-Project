@@ -91,11 +91,11 @@ router.get("/:id/draw", async(request, response) => {
 */
 
 router.post("/:id/play", async (request, response) => {
-  const { color, number } = request.body;
+  const { color, number, uno_card_id } = request.body;
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
   const io = request.app.get("io");
-  console.log({ user_id, game_id, color, number });
+  console.log({ user_id, game_id, color, number, uno_card_id });
   response.status(200).send();
   //check if user is in game
   if(!await Games.checkValidPlayer(game_id, user_id))
@@ -118,8 +118,10 @@ router.post("/:id/play", async (request, response) => {
     console.log("Not a valid card");
     return -1;
   }
-  
+
   //play the card and remove from player's hand
+  //let playing_card_id = await Games.getPlayingCardID(game_id);
+  await Games.playCard(game_id, user_id, discard_card_id, uno_card_id);
   //check if player has 0 cards left in hand, they win and game is over
   //end turn
 

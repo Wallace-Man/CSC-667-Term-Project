@@ -142,7 +142,6 @@ const getDiscardCard = (game_id) => {
   return db.one("SELECT card_hand.uno_card_id FROM card_hand WHERE user_id=-1 AND game_id=$1", [game_id])
   .then(result => {
     const discard_card_id = parseInt(result.uno_card_id);
-    //console.log(discard_card_id);
     return discard_card_id;
   })
   .catch(error => {
@@ -175,4 +174,9 @@ const checkValidCard = (color, number, discard_card_id) => {
   });
 };
 
-module.exports = { create, list, join, updatePlayerCount, countPlayers, state, checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard };
+const playCard = (game_id, user_id, discard_card_id, uno_card_id) => {
+  db.none("UPDATE card_hand SET user_id = -2 WHERE game_id=$1 AND uno_card_id=$2", [game_id, discard_card_id]);
+  db.none("UPDATE card_hand SET user_id = -1 WHERE game_id=$1 AND user_id=$2 AND uno_card_id=$3", [game_id, user_id, uno_card_id]);
+};
+
+module.exports = { create, list, join, updatePlayerCount, countPlayers, state, checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard, playCard};

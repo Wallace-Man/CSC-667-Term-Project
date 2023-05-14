@@ -9,11 +9,11 @@ const discardArea = document.querySelector("#discard-area");
 
 let initialized = false;
 
-const createCard = (color, number) => {
+const createCard = (color, number, uno_card_id) => {
   const card = cardTemplate.content.cloneNode(true).querySelector(".card");
-
   card.dataset.color = color;
   card.dataset.number = number;
+  card.dataset.uno_card_id = uno_card_id
   card.classList.add(`color-${color}`, `number-${number}`);
 
   return card;
@@ -68,10 +68,10 @@ const removeAllChildren = (element) => {
   }
 };
 
-const updateDiscard = ({ card_color, card_number }) => {
+const updateDiscard = ({ card_color, card_number, uno_card_id }) => {
   removeAllChildren(discardArea);
 
-  discardArea.appendChild(createCard(card_color, card_number));
+  discardArea.appendChild(createCard(card_color, card_number, uno_card_id));
 };
 
 const updatePlayers = (players, cards) => {
@@ -89,8 +89,8 @@ const updatePlayers = (players, cards) => {
 
     if (me) {
       removeAllChildren(hand);
-      cards.forEach(({ card_color, card_number }) => {
-        hand.appendChild(createCard(card_color, card_number));
+      cards.forEach(({ card_color, card_number, uno_card_id }) => {
+        hand.appendChild(createCard(card_color, card_number, uno_card_id));
       });
     } else {
       for (let i = 0; i < card_count; i++) {
