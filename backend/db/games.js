@@ -196,5 +196,31 @@ const checkHandCount = (game_id, user_id) => {
   })
 }
 
+const getNextPlayerIndex = (currentIndex, numPlayers, clockwise) => {
+  if(clockwise)
+  {
+    return (currentIndex + 1) % numPlayers;
+  }
+  else
+  {
+    return (currentIndex + numPlayers - 1) % numPlayers;
+  }
+}
+
+const updatePlayerTurn = (game_id, current_player_id, next_player_id) => {
+  db.none("UPDATE game_users SET current_player=false WHERE game_id=$1 AND user_id=$2", [game_id, current_player_id]);
+  db.none("UPDATE game_users SET current_player=true WHERE game_id=$1 AND user_id=$2", [game_id, next_player_id]);
+}
+
+const updateGameDirection = (game_id, clockwise) => {
+  db.none("UPDATE gameboard SET clockwise=$1 WHERE game_id=$2", [!clockwise, game_id]);
+}
+
+const playPlusTwoCard = (game_id, next_player_id) => 
+{
+  db.none("UPDATE card_hand SET user_id=$2 WHERE id IN (SELECT id FROM card_hand WHERE user_id=0 AND game_id=$1 LIMIT 7)", [game_id, next_player_id]);
+}
+
 module.exports = { create, list, join, updatePlayerCount, countPlayers, state, 
-  checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard, playCard, checkHandCount};
+  checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard, playCard, checkHandCount,
+  getNextPlayerIndex, updatePlayerTurn, updateGameDirection, playPlusTwoCard};

@@ -91,13 +91,13 @@ router.get("/:id/draw", async(request, response) => {
 */
 
 router.post("/:id/play", async (request, response) => {
-  const { color, number, uno_card_id, players } = request.body;
+  const { color, number, uno_card_id, players, clockwise } = request.body;
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
   const io = request.app.get("io");
   let currentPlayerID;
   let currentPlayerIndex;
-  console.log({ user_id, game_id, color, number, uno_card_id, players});
+  console.log({ user_id, game_id, color, number, uno_card_id, players, clockwise});
   for(let i = 0; i < players.length; i++)
   {
     if(players[i].current_player)
@@ -139,6 +139,33 @@ router.post("/:id/play", async (request, response) => {
   };
   
   //Apply card effect and end turn
+  let nextPlayerIndex;
+  switch(number)
+  {
+    case 10:
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex + 1, players.length, clockwise);
+      Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      break;
+    case 11:
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, !clockwise);
+      Games.updateGameDirection(game_id, clockwise);
+      Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      break;
+    case 12:
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, clockwise);
+      Games.playPlusTwoCard(game_id, players[nextPlayerIndex].id);
+      break;
+    case 13:
+      Games.playChooseColorCard;
+      break;
+    case 14:
+      Games.playPlusFourCard;
+      break;
+    default:
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, clockwise);
+      Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      break;
+  }
 
   // emit game updated message
 });
