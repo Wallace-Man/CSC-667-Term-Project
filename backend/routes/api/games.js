@@ -87,17 +87,22 @@ router.get("/:id/draw", async(request, response) => {
     //draw a card
     
     //end turn
+
+    //emit gamestate
 }); 
 */
 
 router.post("/:id/play", async (request, response) => {
-  const { color, number, uno_card_id, players, clockwise } = request.body;
+  // let userInput = Games.getUserInput();
+  // console.log(userInput);
+  
+  const { color, number, uno_card_id, players, gameboard } = request.body;
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
   const io = request.app.get("io");
   let currentPlayerID;
   let currentPlayerIndex;
-  console.log({ user_id, game_id, color, number, uno_card_id, players, clockwise});
+  console.log({ user_id, game_id, color, number, uno_card_id, players, gameboard});
   for(let i = 0; i < players.length; i++)
   {
     if(players[i].current_player)
@@ -115,15 +120,21 @@ router.post("/:id/play", async (request, response) => {
   };
 
   //check if it is the user's turn
-  if(!await Games.checkPlayerTurn(game_id, user_id))
+
+  // if(!await Games.checkPlayerTurn(game_id, user_id))
+  // {
+  //   console.log("Not player's turn")
+  //   return -1;
+  // };
+
+  if(currentPlayerID != user_id)
   {
-    console.log("Not player's turn")
     return -1;
-  };
+  }
 
   //check if the card played is valid
   let discard_card_id = await Games.getDiscardCard(game_id);
-  if(!await Games.checkValidCard(color, number, discard_card_id))
+  if(!await Games.checkValidCard(color, number, gameboard.board_color, gameboard.board_number))
   {
     console.log("Not a valid card");
     return -1;
@@ -143,17 +154,22 @@ router.post("/:id/play", async (request, response) => {
   switch(number)
   {
     case 10:
-      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex + 1, players.length, clockwise);
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex + 1, players.length, gameboard.clockwise);
       Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      Games.updateGameColorAndNumber(color, number, game_id);
       break;
     case 11:
-      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, !clockwise);
-      Games.updateGameDirection(game_id, clockwise);
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, !gameboard.clockwise);
+      Games.updateGameDirection(game_id, gameboard.clockwise);
       Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      Games.updateGameColorAndNumber(color, number, game_id);
       break;
     case 12:
-      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, clockwise);
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, gameboard.clockwise);
       Games.playPlusTwoCard(game_id, players[nextPlayerIndex].id);
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex + 1, players.length, gameboard.clockwise);
+      Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      Games.updateGameColorAndNumber(color, number, game_id);
       break;
     case 13:
       Games.playChooseColorCard;
@@ -162,8 +178,9 @@ router.post("/:id/play", async (request, response) => {
       Games.playPlusFourCard;
       break;
     default:
-      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, clockwise);
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, gameboard.clockwise);
       Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      Games.updateGameColorAndNumber(color, number, game_id);
       break;
   }
 

@@ -31,7 +31,9 @@
     "node-pg-migrate": "^6.2.2",
     "pg": "^8.10.0",
     "pg-promise": "^11.4.3",
+    "prompt-sync": "^4.2.0",
     "pug": "^3.0.2",
+    "readline-sync": "^1.4.10",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
   },

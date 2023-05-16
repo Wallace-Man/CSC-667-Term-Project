@@ -40,7 +40,7 @@ const initializeGameTable = (gameState) => {
           return;
         }
         
-        const requestBody = {...event.target.dataset, players: gameState.players, clockwise: gameState.clockwise}
+        const requestBody = {...event.target.dataset, players: gameState.players, gameboard: gameState.gameboard}
 
         fetch(`/api/games/${game_id}/play`, {
           method: "post",

@@ -1,4 +1,5 @@
 const db = require("./connection.js");
+const prompt=require("prompt-sync")({sigint:true}); 
 
 const CREATE_GAME_SQL =
   "INSERT INTO games(closed, number_of_players) VALUES (false, 1) RETURNING id";
@@ -23,10 +24,14 @@ const create = async (creator_id) => {
   await db.none(BUILD_DECK, [id]);
   await db.none(DRAW_7, [id, creator_id]);
 
-  const { uno_card_id } = await db.one(
+  const {uno_card_id} = await db.one(
     "SELECT uno_card_id FROM card_hand WHERE user_id=0 AND game_id=$1 LIMIT 1",
     [id]
   );
+  
+
+  const card_info = await db.one("SELECT * FROM uno_cards WHERE uno_cards.id=$1",[uno_card_id]);
+  await db.none("UPDATE gameboard SET board_color=$1, board_number=$2 WHERE game_id=$3",[card_info.card_color, card_info.card_number, id]);
   await db.none(DISCARD, [id, uno_card_id]);
 
   return { id };
@@ -89,10 +94,7 @@ const state = async (game_id) => {
   );
 
   // table direction
-  const { clockwise } = await db.one(
-    "SELECT * FROM gameboard WHERE game_id=$1",
-    [game_id]
-  );
+  const gameboard = await db.one("SELECT * FROM gameboard WHERE game_id=$1",[game_id]);
 
   return {
     lookup: (user_id) => ({
@@ -108,7 +110,7 @@ const state = async (game_id) => {
       })),
       hand: hands[user_id],
       discard_card,
-      clockwise,
+      gameboard,
     }),
     connections,
   };
@@ -148,29 +150,20 @@ const getDiscardCard = (game_id) => {
   });
 }
 
-const checkValidCard = (color, number, discard_card_id) => {
-  return db.one("SELECT * FROM uno_cards WHERE id=$1", [discard_card_id])
-  .then(result => {
-    const discard_card = result;
-    return discard_card;
-  })
-  .then(discard_card => {
-    if(number == 13 || number == 14)
-    {
-      return 1;
-    }
-    else if(color == discard_card.card_color || number == discard_card.card_number)
-    {
-      return 1;
-    }
-    else
-    {
-      return 0;
-    }
-  })
-  .catch(error => {
-    console.error(error);
-  });
+const checkValidCard = (color, number, gameboard_color, gameboard_number) => {
+  console.log(gameboard_color + "AND" + gameboard_number);
+  if(number == 13 || number == 14)
+  {
+    return 1;
+  }
+  else if(color == gameboard_color || number == gameboard_number)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
 };
 
 const playCard = (game_id, user_id, discard_card_id, uno_card_id) => {
@@ -221,6 +214,30 @@ const playPlusTwoCard = (game_id, next_player_id) =>
   db.none("UPDATE card_hand SET user_id=$2 WHERE id IN (SELECT id FROM card_hand WHERE user_id=0 AND game_id=$1 LIMIT 7)", [game_id, next_player_id]);
 }
 
+const updateGameColorAndNumber = (color, number, game_id) => {
+  db.none(("UPDATE gameboard SET board_color=$1, board_number=$2 WHERE game_id=$3", [color, number, game_id]));
+}
+
+function getUserInput() {
+  let wrongInput = true;
+  let userInput;
+
+  while(wrongInput)
+  {
+    userInput = prompt("Please enter a number to choose a color (1 = Red, 2 = Yellow, 3 = Green, 4 = Blue): ")
+    if(userInput != 1 || userInput != 2 || userInput != 3 || userInput != 4)
+    {
+      continue;
+    }
+    else
+    {
+      wrongInput = false
+    }
+  }
+  return userInput;
+}
+
 module.exports = { create, list, join, updatePlayerCount, countPlayers, state, 
   checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard, playCard, checkHandCount,
-  getNextPlayerIndex, updatePlayerTurn, updateGameDirection, playPlusTwoCard};
+  getNextPlayerIndex, updatePlayerTurn, updateGameDirection, playPlusTwoCard, updateGameColorAndNumber,
+  getUserInput};
