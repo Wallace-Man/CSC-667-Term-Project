@@ -66,6 +66,10 @@ main {
   background-position-y: -450px;
 }
 
+.card.number-0 {
+  background-position-x: 0px;
+}
+
 .card.number-1 {
   background-position-x: -100px;
 }
@@ -119,7 +123,8 @@ main {
 }
 
 .card.number-14 {
-  background-position-x: -1400px;
+  background-position-x: -1300px;
+  background-position-y: -600px;
 }
 
 .hand .card:first-of-type {

@@ -151,7 +151,7 @@ const getDiscardCard = (game_id) => {
 }
 
 const checkValidCard = (color, number, gameboard_color, gameboard_number) => {
-  console.log(gameboard_color + "AND" + gameboard_number);
+  console.log(color, number, gameboard_color, gameboard_number);
   if(number == 13 || number == 14)
   {
     return 1;
@@ -200,8 +200,11 @@ const getNextPlayerIndex = (currentIndex, numPlayers, clockwise) => {
   }
 }
 
-const updatePlayerTurn = (game_id, current_player_id, next_player_id) => {
+const updatePlayerTurnFalse = (game_id, current_player_id) => {
   db.none("UPDATE game_users SET current_player=false WHERE game_id=$1 AND user_id=$2", [game_id, current_player_id]);
+}
+
+const updatePlayerTurnTrue = (game_id, next_player_id) => {
   db.none("UPDATE game_users SET current_player=true WHERE game_id=$1 AND user_id=$2", [game_id, next_player_id]);
 }
 
@@ -211,11 +214,21 @@ const updateGameDirection = (game_id, clockwise) => {
 
 const playPlusTwoCard = (game_id, next_player_id) => 
 {
-  db.none("UPDATE card_hand SET user_id=$2 WHERE id IN (SELECT id FROM card_hand WHERE user_id=0 AND game_id=$1 LIMIT 7)", [game_id, next_player_id]);
+  db.none("UPDATE card_hand SET user_id=$2 WHERE id IN (SELECT id FROM card_hand WHERE user_id=0 AND game_id=$1 LIMIT 2)", [game_id, next_player_id]);
+}
+
+const playPlusFourCard = (game_id, next_player_id) => 
+{
+  db.none("UPDATE card_hand SET user_id=$2 WHERE id IN (SELECT id FROM card_hand WHERE user_id=0 AND game_id=$1 LIMIT 4)", [game_id, next_player_id]);
+}
+
+const drawCard = (game_id, user_id) => 
+{
+  db.none("UPDATE card_hand SET user_id=$2 WHERE id IN (SELECT id FROM card_hand WHERE user_id=0 AND game_id=$1 LIMIT 1)", [game_id, user_id]);
 }
 
 const updateGameColorAndNumber = (color, number, game_id) => {
-  db.none(("UPDATE gameboard SET board_color=$1, board_number=$2 WHERE game_id=$3", [color, number, game_id]));
+  db.none("UPDATE gameboard SET board_color=$1, board_number=$2 WHERE game_id=$3", [color, number, game_id]);
 }
 
 function getUserInput() {
@@ -239,5 +252,5 @@ function getUserInput() {
 
 module.exports = { create, list, join, updatePlayerCount, countPlayers, state, 
   checkValidPlayer, checkPlayerTurn, getDiscardCard, checkValidCard, playCard, checkHandCount,
-  getNextPlayerIndex, updatePlayerTurn, updateGameDirection, playPlusTwoCard, updateGameColorAndNumber,
-  getUserInput};
+  getNextPlayerIndex, updatePlayerTurnFalse, updatePlayerTurnTrue, updateGameDirection, playPlusTwoCard, updateGameColorAndNumber,
+  playPlusFourCard, drawCard};

@@ -22,6 +22,8 @@ const createCard = (color, number, uno_card_id) => {
 const initializeGameTable = (gameState) => {
   const { game_id } = gameState;
 
+  deckArea.appendChild(createCard("-99", "-99"));
+  
   gameState.players.forEach(({ current_player, email, id, me, username }) => {
     const player = playerTemplate.content
       .cloneNode(true)
@@ -32,10 +34,12 @@ const initializeGameTable = (gameState) => {
     if (current_player) {
       player.classList.add("current-player");
     }
-    if (me) {
+    if (me) 
+    {
       player.classList.add("its-a-me");
 
-      player.querySelector(".hand").addEventListener("click", (event) => {
+      player.querySelector(".hand").addEventListener("click", (event) => 
+      {
         if (!event.target.classList.contains("card") || !current_player) {
           return;
         }
@@ -43,6 +47,22 @@ const initializeGameTable = (gameState) => {
         const requestBody = {...event.target.dataset, players: gameState.players, gameboard: gameState.gameboard}
 
         fetch(`/api/games/${game_id}/play`, {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
+        });
+      });
+
+      deckArea.addEventListener("click", (event) => 
+      {
+        if (!current_player) {
+          return;
+        }
+
+        const requestBody = {players: gameState.players, gameboard: gameState.gameboard}
+
+        fetch(`/api/games/${game_id}/draw`, 
+        {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(requestBody),
@@ -59,7 +79,7 @@ const initializeGameTable = (gameState) => {
     playerArea.appendChild(player);
   });
 
-  deckArea.appendChild(createCard("-99", "-99"));
+  
 
   initialized = true;
 };

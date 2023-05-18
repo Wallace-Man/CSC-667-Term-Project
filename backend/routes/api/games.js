@@ -78,30 +78,51 @@ router.get("/:id/start", async(request, response) => {
 }); 
 */
 
-/*
-router.get("/:id/draw", async(request, response) => {
-    //check if user is in game
 
-    //check if it is the user's turn`
+router.post("/:id/draw", async(request, response) => {
+  const { players, gameboard } = request.body;
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  for(let i = 0; i < players.length; i++)
+  {
+    if(players[i].current_player)
+    {
+      currentPlayerID = players[i].id;
+      currentPlayerIndex = i;
+    }
+  }
+  console.log(players, gameboard);
+  response.status(200).send();
+  //check if user is in game
+  if(!await Games.checkValidPlayer(game_id, user_id))
+  {
+    console.log("Not a valid player")
+    return -1;
+  };
 
-    //draw a card
-    
-    //end turn
+  //check if it is the user's turn`
+  if(currentPlayerID != user_id)
+  {
+    return -1;
+  }
 
-    //emit gamestate
+  //draw a card
+  Games.drawCard(game_id,user_id);
+
+  //end turn
+  let nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, gameboard.clockwise);
+  Games.updatePlayerTurnFalse(game_id, user_id);
+  Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
+
+  //emit gamestate
 }); 
-*/
+
 
 router.post("/:id/play", async (request, response) => {
-  // let userInput = Games.getUserInput();
-  // console.log(userInput);
-  
   const { color, number, uno_card_id, players, gameboard } = request.body;
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
   const io = request.app.get("io");
-  let currentPlayerID;
-  let currentPlayerIndex;
   console.log({ user_id, game_id, color, number, uno_card_id, players, gameboard});
   for(let i = 0; i < players.length; i++)
   {
@@ -120,13 +141,6 @@ router.post("/:id/play", async (request, response) => {
   };
 
   //check if it is the user's turn
-
-  // if(!await Games.checkPlayerTurn(game_id, user_id))
-  // {
-  //   console.log("Not player's turn")
-  //   return -1;
-  // };
-
   if(currentPlayerID != user_id)
   {
     return -1;
@@ -134,6 +148,7 @@ router.post("/:id/play", async (request, response) => {
 
   //check if the card played is valid
   let discard_card_id = await Games.getDiscardCard(game_id);
+
   if(!await Games.checkValidCard(color, number, gameboard.board_color, gameboard.board_number))
   {
     console.log("Not a valid card");
@@ -151,40 +166,69 @@ router.post("/:id/play", async (request, response) => {
   
   //Apply card effect and end turn
   let nextPlayerIndex;
+  let randomColorNumber;
+  console.log(number);
   switch(number)
   {
-    case 10:
+    case "10":
+      console.log("AT CASE 10");
       nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex + 1, players.length, gameboard.clockwise);
-      Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      Games.updatePlayerTurnFalse(game_id, user_id);
+      Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
       Games.updateGameColorAndNumber(color, number, game_id);
       break;
-    case 11:
+    case "11":
+      console.log("AT CASE 11");
       nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, !gameboard.clockwise);
       Games.updateGameDirection(game_id, gameboard.clockwise);
-      Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      Games.updatePlayerTurnFalse(game_id, user_id);
+      Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
       Games.updateGameColorAndNumber(color, number, game_id);
       break;
-    case 12:
+    case "12":
+      console.log("AT CASE 12");
       nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, gameboard.clockwise);
       Games.playPlusTwoCard(game_id, players[nextPlayerIndex].id);
       nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex + 1, players.length, gameboard.clockwise);
-      Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      Games.updatePlayerTurnFalse(game_id, user_id);
+      Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
       Games.updateGameColorAndNumber(color, number, game_id);
       break;
-    case 13:
-      Games.playChooseColorCard;
+    case "13":
+      console.log("AT CASE 13");
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, gameboard.clockwise);
+      Games.updatePlayerTurnFalse(game_id, user_id);
+      Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
+      randomColorNumber = Math.floor(Math.random() * 4) + 1;
+      Games.updateGameColorAndNumber(randomColorNumber, number, game_id);
       break;
-    case 14:
-      Games.playPlusFourCard;
+    case "14":
+      console.log("AT CASE 14");
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, gameboard.clockwise);
+      Games.playPlusFourCard(game_id, players[nextPlayerIndex].id);
+      nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex + 1, players.length, gameboard.clockwise);
+      Games.updatePlayerTurnFalse(game_id, user_id);
+      Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
+      randomColorNumber = Math.floor(Math.random() * 4) + 1;
+      Games.updateGameColorAndNumber(randomColorNumber, number, game_id);
       break;
     default:
+      console.log("AT CASE DEFAULT");
       nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, gameboard.clockwise);
-      Games.updatePlayerTurn(game_id, user_id, players[nextPlayerIndex].id);
+      Games.updatePlayerTurnFalse(game_id, user_id);
+      Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
       Games.updateGameColorAndNumber(color, number, game_id);
       break;
   }
 
   // emit game updated message
+  // io.emit(color, number, uno_card_id, players, gameboard);
+  for(let i = 0; i < players.length; i++)
+  {
+    Games.state(game_id).then(({ lookup }) => {
+      io.emit(GAME_UPDATED, lookup(players[i].id));
+    });
+  }
 });
 
 module.exports = router;
