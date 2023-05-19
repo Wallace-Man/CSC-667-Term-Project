@@ -33,6 +33,22 @@ const initSockets = (app, sessionMiddleware) => {
     }
   });
 
+  io.on(GAME_UPDATED, (socket) => {
+    console.log("ON GAME UPDATED!!!!!!");
+    let game_id = socket.handshake.query?.path.substring(1);
+    const user_id = socket.request?.session?.user?.id;
+
+    if (user_id === undefined || game_id === undefined) {
+      return;
+    }
+
+    if (game_id !== 0) {
+      Games.state(game_id).then(({ lookup }) => {
+        socket.emit(GAME_UPDATED, lookup(user_id));
+      });
+    }
+  })
+
   app.set("io", io);
 
   return server;

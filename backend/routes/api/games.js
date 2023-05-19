@@ -83,6 +83,7 @@ router.post("/:id/draw", async(request, response) => {
   const { players, gameboard } = request.body;
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
   for(let i = 0; i < players.length; i++)
   {
     if(players[i].current_player)
@@ -115,6 +116,11 @@ router.post("/:id/draw", async(request, response) => {
   Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
 
   //emit gamestate
+  const { connections, lookup } = await Games.state(game_id);
+
+  connections.forEach(({ user_id: connection_user_id, socket_id }) => {
+    io.to(socket_id).emit(GAME_UPDATED, lookup(connection_user_id));
+  });
 }); 
 
 
@@ -161,13 +167,11 @@ router.post("/:id/play", async (request, response) => {
   //check if player has 0 cards left in hand, they win and game is over
   if(!await Games.checkHandCount(game_id, user_id))
   {
-    console.log("Player: " + user_id + " has cards left");
   };
   
   //Apply card effect and end turn
   let nextPlayerIndex;
   let randomColorNumber;
-  console.log(number);
   switch(number)
   {
     case "10":
@@ -223,12 +227,11 @@ router.post("/:id/play", async (request, response) => {
 
   // emit game updated message
   // io.emit(color, number, uno_card_id, players, gameboard);
-  for(let i = 0; i < players.length; i++)
-  {
-    Games.state(game_id).then(({ lookup }) => {
-      io.emit(GAME_UPDATED, lookup(players[i].id));
-    });
-  }
+  const { connections, lookup } = await Games.state(game_id);
+
+  connections.forEach(({ user_id: connection_user_id, socket_id }) => {
+    io.to(socket_id).emit(GAME_UPDATED, lookup(connection_user_id));
+  });
 });
 
 module.exports = router;

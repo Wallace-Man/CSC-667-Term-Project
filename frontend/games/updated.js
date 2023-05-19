@@ -109,12 +109,20 @@ const updatePlayers = (players, cards) => {
       player.querySelector("span.name").innerText = username;
     }
 
+    if (current_player) {
+      player.classList.add("current-player");
+    }
+    else {
+      player.classList.remove("current-player");
+    }
+
     if (me) {
       removeAllChildren(hand);
       cards.forEach(({ card_color, card_number, uno_card_id }) => {
         hand.appendChild(createCard(card_color, card_number, uno_card_id));
       });
     } else {
+      removeAllChildren(hand);
       for (let i = 0; i < card_count; i++) {
         hand.appendChild(createCard("-99", "-99"));
       }
