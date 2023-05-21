@@ -29,7 +29,7 @@
     "http-errors": "^2.0.0",
     "morgan": "^1.10.0",
     "node-pg-migrate": "^6.2.2",
-    "pg": "^8.10.0",
+    "pg": "^8.11.0",
     "pg-promise": "^11.4.3",
     "prompt-sync": "^4.2.0",
     "pug": "^3.0.2",

@@ -1,59 +1,24 @@
 extends loggedLayout
 
 block content
-  p You are #{ username } #{ email } #{ id }
+    p You are #{ username } #{ email } #{ id }
 
-  .container 
-    |
-    |
-    |
-    |
-    |
-    .row 
-      |
-      |
-      |
-      |
-      |
-      .col-sm 
-        |
-        |
-        |
-        |
-        |
-        button.ms-btn
-          a#create-game-link.ms-btn.ms-action(href="/api/games/create") Create Game
-        ul#game-list
-          // This loop might be wrong in PUG, view 1:07:12 in lecture 4/24
-          each game in games
-            li
-              a(href=`/api/games/${game.id}/join`) 
-                |
-                |
-                |
-                |
-                |
+    .container 
+      .row 
+        .col-sm-6
+          button.ms-btn
+            a#create-game-link.ms-btn.ms-action(href="/api/games/create") Create Game
+          ul#game-list
+            // This loop might be wrong in PUG, view 1:07:12 in lecture 4/24
+            each game in games
+              li
+                a(href=`/api/games/${game.id}/join`) 
                 | Join Game
                 span #{ game.id }
-      .col-sm 
-        |
-        |
-        |
-        |
-        |
-        .chat-container 
-          |
-          |
-          |
-          |
-          |
-          #messages.messages 
-          label
-            input#chatMessage(name="chat-message", placeholder="Message...")
-      script(src="../scripts/chat.js", defer)
-  template#available-game-item
-    div
-      li
-        a(href="#") 
-        | Join
-        span 42
+        .col-sm-6
+          .chat-container 
+            h2 Chat
+            #messages.messages 
+            label
+              input#chatMessage(name="chat-message", placeholder="Message...")
+    script(src="../scripts/chat.js", defer)

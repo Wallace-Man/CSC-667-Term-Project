@@ -106,3 +106,94 @@ input {
   flex-direction: row;
   width: 100%;
 }
+
+.container {
+  margin: 20px;
+}
+
+.row {
+  text-align: center;
+  padding: 10px;
+}
+
+.game-container {
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-style: solid;
+  border-width: 1px;
+  margin-right: 5px;
+  border-radius: 10px;
+}
+
+.chat-container {
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-style: solid;
+  border-width: 1px;
+  margin-right: 5px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.ms-btn {
+  display: inline;
+  list-style-type: none;
+  background-color: #b119cf;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+.ms-btn:hover {
+  background-color: #b626da;
+}
+
+.ms-btn:active {
+  background-color: #8e21af;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+#game-list {
+  list-style-type: none;
+  padding: 5px;
+
+}
+
+#game-list li {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+#chatMessage {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+
+}
+
+#messages.messages{
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#available-game-item {
+  list-style-type: none;
+}
+
+.col-sm-6{
+  width: 50%;
+}
+
+p{
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+}
