@@ -4,8 +4,23 @@ block content
     p You are #{ username } #{ email } #{ id }
 
     .container 
+      |
+      |
+      |
+      |
+      |
       .row 
-        .col-sm-6
+        |
+        |
+        |
+        |
+        |
+        .col-sm 
+          |
+          |
+          |
+          |
+          |
           button.ms-btn
             a#create-game-link.ms-btn.ms-action(href="/api/games/create") Create Game
           ul#game-list
@@ -13,12 +28,32 @@ block content
             each game in games
               li
                 a(href=`/api/games/${game.id}/join`) 
-                | Join Game
-                span #{ game.id }
-        .col-sm-6
+                  |
+                  |
+                  |
+                  |
+                  |
+                  | Join Game 
+                  span #{ game.id }
+        .col-sm 
+          |
+          |
+          |
+          |
+          |
           .chat-container 
-            h2 Chat
+            |
+            |
+            |
+            |
+            |
             #messages.messages 
             label
               input#chatMessage(name="chat-message", placeholder="Message...")
-    script(src="../scripts/chat.js", defer)
+        script(src="../scripts/chat.js", defer)
+    template#available-game-item
+      div
+        li
+          a(href="#") 
+          | Join
+          span 42
