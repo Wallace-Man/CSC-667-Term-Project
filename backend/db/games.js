@@ -25,7 +25,7 @@ const create = async (creator_id) => {
   await db.none(DRAW_7, [id, creator_id]);
 
   const {uno_card_id} = await db.one(
-    "SELECT uno_card_id FROM card_hand WHERE user_id=0 AND game_id=$1 LIMIT 1",
+    "SELECT ch.uno_card_id FROM card_hand AS ch JOIN uno_cards AS uc ON ch.uno_card_id = uc.id WHERE user_id=0 AND game_id=$1 AND uc.card_number < 10 LIMIT 1",
     [id]
   );
   
@@ -77,10 +77,14 @@ const state = async (game_id) => {
 
     return memo;
   }, {});
+
+  //console.log("PLAYER DATA: " + player_data[0].id + ": " + player_data[0].current_player ,player_data[1].id + ": " + player_data[1].current_player);
   const players = player_data.map((player) => ({
     ...player,
     card_count: hands[player.id].length,
   }));
+
+  //console.log("PLAYERS: " + players[0].id + ": " + players[0].current_player ,players[1].id + ": " + players[1].current_player);
 
   const connections = await db.any(
     "SELECT * FROM user_sockets WHERE game_id=$1 AND user_id IN ($2:csv)",
