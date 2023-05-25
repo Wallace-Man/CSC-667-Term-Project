@@ -64,20 +64,6 @@ router.get("/:id/join", async (request, response) => {
   }
 });
 
-/*
-router.get("/:id/start", async(request, response) => {
-    //check if user is in game lobby and is host (user turn is true)
-
-    //creates a new gameboard returning the id
-
-    //redirects all players to new gameboard
-
-    //Insert a card into the gameboard
-
-    //Deal 7 cards to each player
-}); 
-*/
-
 
 router.post("/:id/draw", async(request, response) => {
   const { players, gameboard } = request.body;
@@ -93,7 +79,7 @@ router.post("/:id/draw", async(request, response) => {
     }
   }
   console.log(players, gameboard);
-  response.status(200).send();
+  //response.status(200).send();
   //check if user is in game
   if(!await Games.checkValidPlayer(game_id, user_id))
   {
@@ -108,13 +94,12 @@ router.post("/:id/draw", async(request, response) => {
   }
 
   //draw a card
-  Games.drawCard(game_id,user_id);
+  Games.drawCard(game_id, user_id);
 
   //end turn
   let nextPlayerIndex = Games.getNextPlayerIndex(currentPlayerIndex, players.length, gameboard.clockwise);
   Games.updatePlayerTurnFalse(game_id, user_id);
   Games.updatePlayerTurnTrue(game_id, players[nextPlayerIndex].id);
-
   //emit gamestate
   const { connections, lookup } = await Games.state(game_id);
 
@@ -143,13 +128,13 @@ router.post("/:id/play", async (request, response) => {
   if(!await Games.checkValidPlayer(game_id, user_id))
   {
     console.log("Not a valid player")
-    return -1;
+    return;
   };
 
-  //check if it is the user's turn
+
   if(currentPlayerID != user_id)
   {
-    return -1;
+    return;
   }
 
   //check if the card played is valid
@@ -158,7 +143,7 @@ router.post("/:id/play", async (request, response) => {
   if(!await Games.checkValidCard(color, number, gameboard.board_color, gameboard.board_number))
   {
     console.log("Not a valid card");
-    return -1;
+    return;
   }
 
   //play the card and remove from player's hand
@@ -226,12 +211,12 @@ router.post("/:id/play", async (request, response) => {
   }
 
   // emit game updated message
-  // io.emit(color, number, uno_card_id, players, gameboard);
   const { connections, lookup } = await Games.state(game_id);
 
   connections.forEach(({ user_id: connection_user_id, socket_id }) => {
     io.to(socket_id).emit(GAME_UPDATED, lookup(connection_user_id));
   });
+
 });
 
 module.exports = router;
