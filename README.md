@@ -3,7 +3,7 @@
 |Student Name | Student ID |
 | ----------- | ---------- |
 | Derrick Liang | 920240500 |
-| Wallace Man | |
+| Wallace Man | 921923714 |
 | Aditya Mohan | Not Present In Project |
 | Weiting Liao | Not Present In Project |
 
